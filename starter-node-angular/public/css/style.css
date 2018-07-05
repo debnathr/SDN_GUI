@@ -1,0 +1,54 @@
+body { padding-top:30px; }
+
+anime({
+  targets: input,
+  value: 150, // Animate the input value to 1000
+  round: 1 // Remove decimals by rounding the value
+});
+
+/*portaal general*/
+.portaal {
+    position: absolute;
+    width: 100px;
+    height: 200px;
+    border-radius: 50px / 100px;
+    bottom: 60px;
+}
+
+
+
+/*portaal left*/
+.portaal_links {
+    background: radial-gradient(ellipse at center, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    transition: box-shadow ease-in-out;
+    transition-delay: 1s;
+    transition-duration: 1s;
+    box-shadow: 0 0 55px #57B6FF;
+    opacity: 0.75;
+    left: 50px;
+    animation:mvv 2s infinite;
+}
+@keyframes mvv{
+   0%{
+         box-shadow: 0 0 55px #57B6FF;
+   }
+   50%{
+         box-shadow: 0 0 0px #57B6FF;
+   }
+}
+
+.portaal_rechts {
+    background: radial-gradient(ellipse at center, rgba(243,197,189,1) 0%,rgba(232,108,87,1) 50%,rgba(234,40,3,1) 51%,rgba(255,102,0,1) 75%,rgba(199,34,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    box-shadow: 0 0 55px #FF6600;
+    opacity: 0.55;
+    left: 750px;
+    animation:mv 2s infinite;
+}
+@keyframes mv{
+   0%{
+         box-shadow: 0 0 55px #FF6600;
+   }
+   50%{
+         box-shadow: 0 0 0px #FF6600;
+   }
+}
