@@ -82,7 +82,7 @@ app.post('/api', function(req, res){
         result['flag'] = flag;
     });
     console.log(result);
-   /res.contentType('application/json');
+    res.contentType('application/json');
     res.send(JSON.stringify(result));
 });
 //dataChange(app, io, tutorial);
