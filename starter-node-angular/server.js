@@ -1,6 +1,5 @@
 // modules =================================================
 var express = require('express');
-var mongoose       = require('mongoose');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var app = require('express')();
@@ -8,26 +7,10 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 var dataChange   = require('./controller/dataChange');
-var Db = require('mongodb').Db,
-    MongoClient = require('mongodb').MongoClient,
-    Server = require('mongodb').Server,
-    ReplSetServers = require('mongodb').ReplSetServers,
-    ObjectID = require('mongodb').ObjectID,
-    Binary = require('mongodb').Binary,
-    GridStore = require('mongodb').GridStore,
-    Grid = require('mongodb').Grid,
-    Code = require('mongodb').Code,
-    BSON = require('mongodb').pure().BSON,
-    assert = require('assert');
-
-
-
-mongoose.connect('mongodb://127.0.0.1:27017/test'); // connect to our mongoDB database (commented out after you enter in your own credentials)
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-    console.log("We are connected to mongoDB");
-})
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var url = 'mongodb://18.191.224.213:27017/elastiCon';
+var controllers, flags, gen_id;
 
 
 // get all data/stuff of the body (POST) parameters
@@ -42,22 +25,21 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/public/views/index.html');
 });
 
-io.on('connection', function(client){
-    console.log("we are connected to sockets");
+
+app.post('/api', function(req, res){
+    MongoClient.connect(url,function(err,db){
+        if(err) throw err;
+         if(mongoDb.isConnected()){
+            console.log('connected to MD');
+        }
+        assert.equal(err,null);
+        controllers = db.collection("controllers").find();
+        flags  = db.collection("flags").find(); 
+        gen_id = db.collection("gen_id").find();
+    });
+    res.contentType('application/json');
+    res.send(JSON.stringify({ controllers: controllers, flags:flags, gen_id:gen_id }));
 });
-
-var tutorialspointSchema = mongoose.Schema({
-    name: String
-  });
-
-var tutorial = mongoose.model('tutorialspoint',  tutorialspointSchema);
-
-var silence = new tutorial({ name: 'Silence' });
-silence.save(function (err, silence) {
-    if (err) return console.error(err);
-  });
-console.log(silence.name);
-
 //dataChange(app, io, tutorial);
 
 // start app ===============================================
