@@ -1,5 +1,6 @@
 // modules =================================================
 var express = require('express');
+var mongoose       = require('mongoose');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var app = require('express')();
@@ -7,11 +8,30 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 var dataChange   = require('./controller/dataChange');
-var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
-var url = 'mongodb://18.191.224.213:27017/elastiCon';
-var controllers, flags, gen_id;
+var Db = require('mongodb').Db,
+    MongoClient = require('mongodb').MongoClient,
+    Server = require('mongodb').Server,
+    ReplSetServers = require('mongodb').ReplSetServers,
+    ObjectID = require('mongodb').ObjectID,
+    Binary = require('mongodb').Binary,
+    GridStore = require('mongodb').GridStore,
+    Grid = require('mongodb').Grid,
+    Code = require('mongodb').Code,
+    BSON = require('mongodb').pure().BSON,
+    assert = require('assert');
 
+ result = [];   
+
+
+mongoose.connect('mongodb://18.191.224.213:27017/elastiCon'); // connect to our mongoDB database (commented out after you enter in your own credentials)
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+    console.log("We are connected to mongoDB");
+})
+// Connection URL
+//var url = 'mongodb://dave:password@localhost:27017/myproject?authSource=admin';
+// Use connect method to connect to the Server
 
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json()); // parse application/json 
@@ -25,20 +45,45 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/public/views/index.html');
 });
 
+var controllerSchema = mongoose.Schema({
+    stats: String,
+    role: String,
+    id: String
+  });
+
+var controller = mongoose.model('controllers',  controllerSchema);
+
+var MigrationInProgress = mongoose.Schema({
+    status: String,
+    datapath: String,
+    dpid: String
+});
+var flagSchema = mongoose.Schema({
+    MigrationEnd: String,
+    MigrationStart: String,
+    MigrationInProgress: [MigrationInProgress]
+  });
+var flag = mongoose.model('flag',  flagSchema);
+
+var genSchema = mongoose.Schema({
+    value: String,
+  });
+var gen_id = mongoose.model('gen_id',  genSchema);
+
 
 app.post('/api', function(req, res){
-    MongoClient.connect(url,function(err,db){
-        if(err) throw err;
-         if(mongoDb.isConnected()){
-            console.log('connected to MD');
-        }
-        assert.equal(err,null);
-        controllers = db.collection("controllers").find();
-        flags  = db.collection("flags").find(); 
-        gen_id = db.collection("gen_id").find();
+    controller.find({}, function (err, controller) {
+        result['controller'] = controller;
     });
-    res.contentType('application/json');
-    res.send(JSON.stringify({ controllers: controllers, flags:flags, gen_id:gen_id }));
+    gen_id.find({}, function (err, gen) {
+        result['gen_id'] = gen;
+    });
+    flag.find({}, function (err, flag) {
+        result['flag'] = flag;
+    });
+    console.log(result);
+   /res.contentType('application/json');
+    res.send(JSON.stringify(result));
 });
 //dataChange(app, io, tutorial);
 
