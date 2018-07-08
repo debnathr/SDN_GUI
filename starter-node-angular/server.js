@@ -22,7 +22,7 @@ var Db = require('mongodb').Db,
 
 
 
-mongoose.connect('mongodb://18.219.185.25:27017/test'); // connect to our mongoDB database (commented out after you enter in your own credentials)
+mongoose.connect('mongodb://127.0.0.1:27017/test'); // connect to our mongoDB database (commented out after you enter in your own credentials)
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -58,7 +58,7 @@ silence.save(function (err, silence) {
   });
 console.log(silence.name);
 
-dataChange(app, io, tutorial);
+//dataChange(app, io, tutorial);
 
 // start app ===============================================
 http.listen(3000, function(){

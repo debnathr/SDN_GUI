@@ -5,7 +5,7 @@
 	
 	  	<div class="row">
 	  		<div class="col-xs-4">
-	  			<h4>C0 is <b style="color: #e67e22">Master</b> now</h4>
+	  			<h4>C0 is <b style="color: #e67e22" ng-ig="master">Master</b><b style="color: #e67e22" ng-ig="slave">Slave</b> now</h4>
 	  			<h4 style="text-align: center;">
 	  				<!-- <input value="0"> -->
 	  				<p style="    color: red;margin-bottom: 0px;">S1<div id="domAttributes"> <input class="text-output" style="width: 50%;
@@ -27,7 +27,7 @@
 	  		
 	  	</div>
 	  	<div class="col-xs-4">
-	  		<h4>C1 is <b style="color: #9b59b6">Slave</b> now</h4>
+	  		<h4>C1 is <b style="color: #9b59b6" ng-if="slave">Slave</b> <b style="color: #9b59b6" ng-if="master">Master</b> now</h4>
 	  		<!-- <h4 style="text-align: center;"></h4> -->
 	  		<h4 style="text-align: center;">
 	  		<p style="    color: red;margin-bottom: 0px;">S1<div id="domAttributes1"> <input class="text-output" style="    width: 50%;
@@ -63,7 +63,7 @@
 		    <div class="col-xs-4">
 		      <div class="card">
 			  <div class="card-body" style="height: 100px;">
-			    <p>Migration Started</p>
+			    <p>{{texttodisplay}}</p>
 			  </div>
 			</div>
 		    </div>
