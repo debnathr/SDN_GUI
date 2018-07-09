@@ -1,4 +1,4 @@
-// modules =================================================
+
 var express = require('express');
 var mongoose       = require('mongoose');
 var bodyParser     = require('body-parser');
@@ -20,7 +20,7 @@ var Db = require('mongodb').Db,
     BSON = require('mongodb').pure().BSON,
     assert = require('assert');
 
- result = [];   
+ var result = "a";   
 
 
 mongoose.connect('mongodb://18.191.224.213:27017/elastiCon'); // connect to our mongoDB database (commented out after you enter in your own credentials)
@@ -71,17 +71,69 @@ var genSchema = mongoose.Schema({
 var gen_id = mongoose.model('gen_id',  genSchema);
 
 
+
+/**
+ * Mongoose Function: Controller Find
+ * @return Promise
+ */
+
+ function controller_find(data) {
+    return new Promise(function(resolve, reject) {
+        controller.find(data, function(err, controller) {
+            if(err) {
+                reject(err);
+            }
+            resolve(controller);
+        });
+    });
+ }
+
+
+/**
+ * Mongoose Function: Gen Find
+ * @return Promise
+ */
+
+function gen_find(data) {
+    return new Promise(function(resolve, reject) {
+        gen_id.find(data, function(err, controller) {
+            if(err) {
+                reject(err);
+            }
+            resolve(controller);
+        });
+    });
+ }
+
+
+/**
+ * Mongoose Function: Flag Find
+ * @return Promise
+ */
+
+function flag_find(data) {
+    return new Promise(function(resolve, reject) {
+        flag.find(data, function(err, controller) {
+            if(err) {
+                reject(err);
+            }
+            resolve(controller);
+        });
+    });
+ }
+
+
 app.post('/api', function(req, res){
-    controller.find({}, function (err, controller) {
-        result['controller'] = controller;
-    });
-    gen_id.find({}, function (err, gen) {
-        result['gen_id'] = gen;
-    });
-    flag.find({}, function (err, flag) {
-        result['flag'] = flag;
-    });
-    console.log(result);
+    var promise_Arr = [];
+    promise_Arr[0] = controller_find({});
+    promise_Arr[1] = gen_find({});
+    promise_Arr[2] = flag_find({});
+    Promise.all(promise_Arr).then(function(response) {
+        result = response;
+    }).catch(function(err) {
+        console.log('erro');
+        console.log(err);
+    })
     res.contentType('application/json');
     res.send(JSON.stringify(result));
 });
