@@ -1,4 +1,4 @@
-
+// modules =================================================
 var express = require('express');
 var mongoose       = require('mongoose');
 var bodyParser     = require('body-parser');
@@ -20,7 +20,7 @@ var Db = require('mongodb').Db,
     BSON = require('mongodb').pure().BSON,
     assert = require('assert');
 
- var result = "a";   
+ var result = {};   
 
 
 mongoose.connect('mongodb://18.191.224.213:27017/elastiCon'); // connect to our mongoDB database (commented out after you enter in your own credentials)
@@ -129,13 +129,18 @@ app.post('/api', function(req, res){
     promise_Arr[1] = gen_find({});
     promise_Arr[2] = flag_find({});
     Promise.all(promise_Arr).then(function(response) {
-        result = response;
+        result['controller'] = response[0];
+        result['gen_id'] = response[1];
+        result['flag'] = response[2];
+        res.contentType('application/json');
+        res.send(JSON.stringify(result));
     }).catch(function(err) {
         console.log('erro');
         console.log(err);
+        res.contentType('application/json');
+        res.status(500).send(JSON.stringify(result));
     })
-    res.contentType('application/json');
-    res.send(JSON.stringify(result));
+    
 });
 //dataChange(app, io, tutorial);
 
